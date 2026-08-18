@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvProxyStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proxy: Not authenticated"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ride Booking"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etPickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Pickup location"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/etDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Destination"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ride Type"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spinnerRideType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ride Category"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnBookRide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BOOK RIDE"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:id="@+id/tvSingleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Singleton: Same instance = true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: No ride booked"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:id="@+id/tvRideDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="16sp"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/btnShowDatabase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SHOW DATABASE"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/btnClearDatabase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CLEAR ALL DATABASE"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+
+</ScrollView>
