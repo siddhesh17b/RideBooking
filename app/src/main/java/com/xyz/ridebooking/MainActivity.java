@@ -104,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
 
         tvSingleton = findViewById(R.id.tvSingleton);
 
+        RideBookingSystem system1 = RideBookingSystem.getInstance();
+        RideBookingSystem system2 = RideBookingSystem.getInstance();
+
+        boolean same = system1 == system2;
+
+        tvSingleton.setText("Singleton: Same instance = " + same);
+
         spinnerRideType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, rideTypes));
         spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
