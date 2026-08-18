@@ -19,6 +19,11 @@ import com.xyz.ridebooking.observer.Driver;
 import com.xyz.ridebooking.observer.RideCoordinator;
 import com.xyz.ridebooking.observer.Rider;
 import com.xyz.ridebooking.observer.DatabaseManager;
+import com.xyz.ridebooking.chain.DetailsHandler;
+import com.xyz.ridebooking.chain.LoginHandler;
+import com.xyz.ridebooking.chain.RideHandler;
+import com.xyz.ridebooking.chain.RideRequest;
+import com.xyz.ridebooking.chain.RideTypeHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // ==================== PROXY PATTERN ====================
+
         tvProxyStatus = findViewById(R.id.tvProxyStatus);
         btnLogin = findViewById(R.id.btnLogin);
 
@@ -54,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // ==================== OBSERVER PATTERN ====================
+
         RideCoordinator coordinator = new RideCoordinator(this);
         coordinator.registerObserver(new Rider());
         coordinator.registerObserver(new Driver());
@@ -67,7 +76,20 @@ public class MainActivity extends AppCompatActivity {
         String[] rideTypes = {"Bike", "Auto", "Car"};
         String[] categories = {"Economy", "Premium"};
 
+        // ==================== DATABASE ====================
+
         DatabaseManager database = new DatabaseManager(this);
+
+        // ==================== CHAIN OF RESPONSIBILITY ====================
+
+        RideHandler loginHandler = new LoginHandler();
+        RideHandler detailsHandler = new DetailsHandler();
+        RideHandler rideTypeHandler = new RideTypeHandler();
+
+        loginHandler.setNextHandler(detailsHandler);
+        detailsHandler.setNextHandler(rideTypeHandler);
+
+        // ==================== DATABASE DISPLAY ====================
 
         btnShowDatabase = findViewById(R.id.btnShowDatabase);
 
@@ -78,20 +100,37 @@ public class MainActivity extends AppCompatActivity {
 
         btnClearDatabase = findViewById(R.id.btnClearDatabase);
 
+        // ==================== SINGLETON PATTERN ====================
+
         tvSingleton = findViewById(R.id.tvSingleton);
 
         spinnerRideType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, rideTypes));
         spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
         btnBookRide.setOnClickListener(v -> {
+
             String name = ((android.widget.EditText) findViewById(R.id.etName)).getText().toString();
             String pickup = ((android.widget.EditText) findViewById(R.id.etPickup)).getText().toString();
             String destination = ((android.widget.EditText) findViewById(R.id.etDestination)).getText().toString();
             String rideType = spinnerRideType.getSelectedItem().toString();
             String category = spinnerCategory.getSelectedItem().toString();
 
+            // ==================== CHAIN OF RESPONSIBILITY ====================
+
+            RideRequest request = new RideRequest(name, pickup, destination, rideType, loggedIn);
+
+            if(!loginHandler.handle(request)) {
+                tvStatus.setText("Status: Booking Denied");
+                tvRideDetails.setText("Chain of Responsibility: Request rejected.");
+                return;
+            }
+
+            // ==================== FACTORY METHOD ====================
+
             RideFactory factory = new RideFactory();
             Ride ride = factory.createRide(rideType, name);
+
+            // ==================== ABSTRACT FACTORY ====================
 
             RideFamilyFactory familyFactory;
 
@@ -107,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
             else
                 familyRide = familyFactory.createCar();
 
+            // ==================== PROXY PATTERN ====================
+
             RideService system = new RideServiceProxy(loggedIn);
             String result = system.bookRide(ride);
 
@@ -118,13 +159,19 @@ public class MainActivity extends AppCompatActivity {
 
             String rideId = "R" + System.currentTimeMillis();
 
+            // ==================== DATABASE ====================
+
             database.insertRide(rideId, name, pickup, destination, rideType, category, "Requested");
+
+            // ==================== OBSERVER PATTERN ====================
 
             coordinator.notifyObservers(rideId, "Accepted");
 
             tvStatus.setText("Status: Ride Accepted");
             tvRideDetails.setText(result + "\nCategory: " + familyRide + "\nRide ID: " + rideId);
         });
+
+        // ==================== DATABASE ====================
 
         btnClearDatabase.setOnClickListener(v -> {
             database.clearDatabase();
