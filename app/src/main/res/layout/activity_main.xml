@@ -31,14 +31,6 @@
                 android:textColor="@color/on_background"
                 android:textSize="26sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Design Patterns Mobility Platform"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="13sp" />
         </LinearLayout>
 
         <!-- ==================== PROXY / AUTH CARD ==================== -->
@@ -140,12 +132,24 @@
                         android:src="@drawable/ic_directions_car" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="Trip Booking Details"
                         android:textColor="@color/on_surface"
                         android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPrefill"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="DEMO FILL"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:icon="@drawable/ic_magic"
+                        app:iconSize="14dp" />
                 </LinearLayout>
 
                 <!-- Passenger Name -->

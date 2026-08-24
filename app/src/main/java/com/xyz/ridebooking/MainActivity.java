@@ -116,6 +116,17 @@ public class MainActivity extends AppCompatActivity {
 
         tvSingleton.setText("Singleton: Same instance = " + same);
 
+        // ==================== DEMO PREFILL ====================
+
+        Button btnPrefill = findViewById(R.id.btnPrefill);
+        if(btnPrefill != null) {
+            btnPrefill.setOnClickListener(v -> {
+                ((android.widget.EditText) findViewById(R.id.etName)).setText("Siddhesh");
+                ((android.widget.EditText) findViewById(R.id.etPickup)).setText("Home");
+                ((android.widget.EditText) findViewById(R.id.etDestination)).setText("College");
+            });
+        }
+
         spinnerRideType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, rideTypes));
         spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
@@ -130,14 +141,33 @@ public class MainActivity extends AppCompatActivity {
             tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             tvRideDetails.setGravity(android.view.Gravity.START);
 
-            // ==================== CHAIN OF RESPONSIBILITY ====================
+            // ==================== CHAIN OF RESPONSIBILITY TRACER ====================
 
             RideRequest request = new RideRequest(name, pickup, destination, rideType, loggedIn);
 
+            boolean loginOk = loggedIn;
+            boolean detailsOk = !name.trim().isEmpty() && !pickup.trim().isEmpty() && !destination.trim().isEmpty();
+            boolean typeOk = rideType.equalsIgnoreCase("Bike") || rideType.equalsIgnoreCase("Auto") || rideType.equalsIgnoreCase("Car");
+
             if(!loginHandler.handle(request)) {
-                tvStatus.setText("Status: Booking Denied (Auth Required)");
+                tvStatus.setText("Status: Request Denied");
                 tvStatus.setTextColor(getColor(R.color.status_denied));
-                tvRideDetails.setText("🔒 [Proxy / Chain of Responsibility]\nAccess Denied: You must be logged in to book a ride.\n\n👉 Action: Tap 'LOGIN' at the top to authenticate.");
+
+                StringBuilder chainTrace = new StringBuilder();
+                chainTrace.append("── Chain of Responsibility Tracer ──\n");
+                chainTrace.append(loginOk ? "✓ [1/3] LoginHandler: PASSED (Authenticated)\n" : "❌ [1/3] LoginHandler: REJECTED (Not Authenticated)\n");
+                chainTrace.append(loginOk ? (detailsOk ? "✓ [2/3] DetailsHandler: PASSED (All fields provided)\n" : "❌ [2/3] DetailsHandler: REJECTED (Missing Name or Locations)\n") : "⏭️ [2/3] DetailsHandler: SKIPPED\n");
+                chainTrace.append((loginOk && detailsOk) ? (typeOk ? "✓ [3/3] RideTypeHandler: PASSED\n" : "❌ [3/3] RideTypeHandler: REJECTED\n") : "⏭️ [3/3] RideTypeHandler: SKIPPED\n");
+                chainTrace.append("\n👉 Tip: ");
+                if(!loginOk) {
+                    chainTrace.append("Click LOGIN at the top to pass Proxy & LoginHandler.");
+                } else if(!detailsOk) {
+                    chainTrace.append("Fill in Name, Pickup, and Destination (or click DEMO FILL).");
+                } else {
+                    chainTrace.append("Select a valid ride type.");
+                }
+
+                tvRideDetails.setText(chainTrace.toString());
                 return;
             }
 
@@ -146,21 +176,35 @@ public class MainActivity extends AppCompatActivity {
             RideFactory factory = new RideFactory();
             Ride ride = factory.createRide(rideType, name);
 
+            int baseFare;
+            if(rideType.equalsIgnoreCase("Bike")) {
+                baseFare = 50;
+            } else if(rideType.equalsIgnoreCase("Auto")) {
+                baseFare = 90;
+            } else {
+                baseFare = 180;
+            }
+
             // ==================== ABSTRACT FACTORY ====================
 
             RideFamilyFactory familyFactory;
+            double categoryMultiplier;
 
-            if(category.equalsIgnoreCase("Economy"))
+            if(category.equalsIgnoreCase("Economy")) {
                 familyFactory = new EconomyRideFactory();
-            else
+                categoryMultiplier = 1.0;
+            } else {
                 familyFactory = new PremiumRideFactory();
+                categoryMultiplier = 1.5;
+            }
 
             String familyRide;
-
             if(rideType.equalsIgnoreCase("Bike"))
                 familyRide = familyFactory.createBike();
             else
                 familyRide = familyFactory.createCar();
+
+            int finalFare = (int) (baseFare * categoryMultiplier);
 
             // ==================== PROXY PATTERN ====================
             // Client uses the Proxy instead of directly accessing RealRideService.
@@ -170,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             // or forwards it to RealRideService.
             String result = system.bookRide(ride);
 
-            // Useless block
+            // Useless Block
             if(!loggedIn) {
                 tvStatus.setText("Status: Booking Denied");
                 tvStatus.setTextColor(getColor(R.color.status_denied));
@@ -191,13 +235,18 @@ public class MainActivity extends AppCompatActivity {
             tvStatus.setText("Status: Ride Accepted");
             tvStatus.setTextColor(getColor(R.color.status_success));
             tvRideDetails.setText(
-                result + "\n" +
-                "Category: " + familyRide + "\n" +
-                "Ride ID: " + rideId + "\n\n" +
+                "🎉 " + result + "\n" +
+                "📦 Vehicle Family: " + familyRide + "\n" +
+                "💰 Estimated Fare: ₹" + finalFare + " (Base: ₹" + baseFare + " × " + categoryMultiplier + "x " + category + " Tier)\n" +
+                "🏷️ Ride ID: " + rideId + "\n\n" +
+                "── Chain of Responsibility Tracer ──\n" +
+                "✓ [1/3] LoginHandler: PASSED (Proxy Auth Valid)\n" +
+                "✓ [2/3] DetailsHandler: PASSED (Passenger & Route Valid)\n" +
+                "✓ [3/3] RideTypeHandler: PASSED (Valid " + rideType + " Selected)\n\n" +
                 "── Observer Pattern Broadcast ──\n" +
-                "• RideCoordinator notified 2 observers:\n" +
-                "  ↳ Driver Observer: Ride " + rideId + " is Accepted\n" +
-                "  ↳ Rider Observer: Ride " + rideId + " is Accepted"
+                "📢 RideCoordinator notified 2 registered observers:\n" +
+                "   ↳ Driver Observer: Received update (Ride " + rideId + " is Accepted)\n" +
+                "   ↳ Rider Observer: Received update (Ride " + rideId + " is Accepted)"
             );
         });
 
