@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         boolean same = system1 == system2;
 
-        // Example: Both will output the exact same hashcode like @4a2b1c
         tvSingleton.setText("Singleton: Same instance = " + same +
                 "\n(ID1: " + Integer.toHexString(System.identityHashCode(system1)) +
                 " == ID2: " + Integer.toHexString(System.identityHashCode(system2)) + ")");
