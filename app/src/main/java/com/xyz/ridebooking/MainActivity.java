@@ -114,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
 
         boolean same = system1 == system2;
 
-        tvSingleton.setText("Singleton: Same instance = " + same);
+        // Example: Both will output the exact same hashcode like @4a2b1c
+        tvSingleton.setText("Singleton: Same instance = " + same +
+                "\n(ID1: " + Integer.toHexString(System.identityHashCode(system1)) +
+                " == ID2: " + Integer.toHexString(System.identityHashCode(system2)) + ")");
 
         // ==================== DEMO PREFILL ====================
 
@@ -150,21 +153,23 @@ public class MainActivity extends AppCompatActivity {
             boolean typeOk = rideType.equalsIgnoreCase("Bike") || rideType.equalsIgnoreCase("Auto") || rideType.equalsIgnoreCase("Car");
 
             if(!loginHandler.handle(request)) {
-                tvStatus.setText("Status: Request Denied");
+                tvStatus.setText("Status: Request Denied ❌");
                 tvStatus.setTextColor(getColor(R.color.status_denied));
 
                 StringBuilder chainTrace = new StringBuilder();
+                chainTrace.append("Validation Failed in Chain of Responsibility\n");
+                chainTrace.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
                 chainTrace.append("── Chain of Responsibility Tracer ──\n");
-                chainTrace.append(loginOk ? "✓ [1/3] LoginHandler: PASSED (Authenticated)\n" : "❌ [1/3] LoginHandler: REJECTED (Not Authenticated)\n");
-                chainTrace.append(loginOk ? (detailsOk ? "✓ [2/3] DetailsHandler: PASSED (All fields provided)\n" : "❌ [2/3] DetailsHandler: REJECTED (Missing Name or Locations)\n") : "⏭️ [2/3] DetailsHandler: SKIPPED\n");
-                chainTrace.append((loginOk && detailsOk) ? (typeOk ? "✓ [3/3] RideTypeHandler: PASSED\n" : "❌ [3/3] RideTypeHandler: REJECTED\n") : "⏭️ [3/3] RideTypeHandler: SKIPPED\n");
-                chainTrace.append("\n👉 Tip: ");
+                chainTrace.append(loginOk ? "✓ [1/3] LoginHandler: PASSED (Proxy Authenticated)\n" : "❌ [1/3] LoginHandler: REJECTED (User Not Logged In)\n");
+                chainTrace.append(loginOk ? (detailsOk ? "✓ [2/3] DetailsHandler: PASSED (All Fields Valid)\n" : "❌ [2/3] DetailsHandler: REJECTED (Missing Name or Locations)\n") : "⏭️ [2/3] DetailsHandler: SKIPPED\n");
+                chainTrace.append((loginOk && detailsOk) ? (typeOk ? "✓ [3/3] RideTypeHandler: PASSED (Valid Ride Type)\n" : "❌ [3/3] RideTypeHandler: REJECTED\n") : "⏭️ [3/3] RideTypeHandler: SKIPPED\n");
+                chainTrace.append("\n👉 Next Step: ");
                 if(!loginOk) {
-                    chainTrace.append("Click LOGIN at the top to pass Proxy & LoginHandler.");
+                    chainTrace.append("Tap 'LOGIN' at the top to pass Proxy Auth.");
                 } else if(!detailsOk) {
-                    chainTrace.append("Fill in Name, Pickup, and Destination (or click DEMO FILL).");
+                    chainTrace.append("Enter Name, Pickup & Destination (or tap DEMO FILL).");
                 } else {
-                    chainTrace.append("Select a valid ride type.");
+                    chainTrace.append("Choose a valid ride type.");
                 }
 
                 tvRideDetails.setText(chainTrace.toString());
@@ -214,9 +219,9 @@ public class MainActivity extends AppCompatActivity {
             // or forwards it to RealRideService.
             String result = system.bookRide(ride);
 
-            // Useless Block
+            // Fallback check
             if(!loggedIn) {
-                tvStatus.setText("Status: Booking Denied");
+                tvStatus.setText("Status: Booking Denied ❌");
                 tvStatus.setTextColor(getColor(R.color.status_denied));
                 tvRideDetails.setText(result);
                 return;
@@ -232,21 +237,24 @@ public class MainActivity extends AppCompatActivity {
 
             coordinator.notifyObservers(rideId, "Accepted");
 
-            tvStatus.setText("Status: Ride Accepted");
+            tvStatus.setText("Status: Ride Accepted ✅");
             tvStatus.setTextColor(getColor(R.color.status_success));
             tvRideDetails.setText(
-                "🎉 " + result + "\n" +
-                "📦 Vehicle Family: " + familyRide + "\n" +
-                "💰 Estimated Fare: ₹" + finalFare + " (Base: ₹" + baseFare + " × " + categoryMultiplier + "x " + category + " Tier)\n" +
-                "🏷️ Ride ID: " + rideId + "\n\n" +
+                "✓ " + result + "\n" +
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                "• Passenger: " + name + "\n" +
+                "• Route: " + pickup + " ➔ " + destination + "\n" +
+                "• Vehicle: " + familyRide + "\n" +
+                "• Est. Fare: ₹" + finalFare + " (Base: ₹" + baseFare + " × " + categoryMultiplier + "x " + category + ")\n" +
+                "• Ride ID: " + rideId + "\n\n" +
                 "── Chain of Responsibility Tracer ──\n" +
                 "✓ [1/3] LoginHandler: PASSED (Proxy Auth Valid)\n" +
                 "✓ [2/3] DetailsHandler: PASSED (Passenger & Route Valid)\n" +
-                "✓ [3/3] RideTypeHandler: PASSED (Valid " + rideType + " Selected)\n\n" +
+                "✓ [3/3] RideTypeHandler: PASSED (" + rideType + " Confirmed)\n\n" +
                 "── Observer Pattern Broadcast ──\n" +
-                "📢 RideCoordinator notified 2 registered observers:\n" +
-                "   ↳ Driver Observer: Received update (Ride " + rideId + " is Accepted)\n" +
-                "   ↳ Rider Observer: Received update (Ride " + rideId + " is Accepted)"
+                "📢 RideCoordinator notified 2 observers:\n" +
+                "  ↳ Driver Observer: Ride " + rideId + " is Accepted\n" +
+                "  ↳ Rider Observer: Ride " + rideId + " is Accepted"
             );
         });
 
@@ -258,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
             tvStatus.setTextColor(getColor(R.color.status_warning));
             tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             tvRideDetails.setGravity(android.view.Gravity.START);
-            tvRideDetails.setText("All ride records have been deleted.");
+            tvRideDetails.setText("Database cleared successfully.\nAll ride records have been removed.");
         });
     }
 }

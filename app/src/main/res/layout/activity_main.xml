@@ -374,8 +374,7 @@
                     android:paddingVertical="12dp"
                     android:text="Singleton: Same instance = true"
                     android:textColor="@color/primary"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="17sp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -414,7 +413,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Status: No ride booked"
                     android:textColor="@color/on_surface"
-                    android:textSize="19sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <!-- Details Output Box -->
@@ -431,13 +430,12 @@
                         android:id="@+id/tvRideDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableTop="@drawable/ic_receipt_long"
-                        android:drawablePadding="10dp"
-                        android:gravity="center"
-                        android:lineSpacingMultiplier="1.35"
-                        android:text="No active ride.\nSubmit a trip above to observe pattern execution."
-                        android:textColor="@color/on_surface"
-                        android:textSize="15sp" />
+                        android:fontFamily="sans-serif"
+                        android:gravity="start|top"
+                        android:lineSpacingExtra="4dp"
+                        android:text="System Ready.\nSubmit a trip above to observe design pattern execution."
+                        android:textColor="#334155"
+                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
