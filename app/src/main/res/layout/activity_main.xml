@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <!-- ==================== APP HEADER ==================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
             <TextView
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="Ride Booking"
                 android:textColor="@color/on_background"
-                android:textSize="26sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -37,10 +37,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:animateLayoutChanges="true"
             app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
             app:strokeColor="@color/outline_variant"
             app:strokeWidth="1dp">
@@ -51,12 +51,12 @@
                 android:animateLayoutChanges="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="14dp">
+                android:padding="18dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="14dp"
                     android:contentDescription="Auth Shield"
                     android:src="@drawable/ic_shield_auth" />
 
@@ -71,17 +71,17 @@
                         android:layout_height="wrap_content"
                         android:text="PROXY PATTERN AUTH"
                         android:textColor="@color/on_surface_variant"
-                        android:textSize="11sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvProxyStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="4dp"
                         android:text="Proxy: Not authenticated"
                         android:textColor="@color/on_surface"
-                        android:textSize="14sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -89,12 +89,12 @@
                     android:id="@+id/btnLogin"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="90dp"
+                    android:layout_height="48dp"
+                    android:minWidth="100dp"
                     android:text="LOGIN"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
-                    app:cornerRadius="20dp" />
+                    app:cornerRadius="24dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -102,10 +102,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:animateLayoutChanges="true"
             app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="18dp"
             app:cardElevation="1dp"
             app:strokeColor="@color/outline_variant"
             app:strokeWidth="1dp">
@@ -115,19 +115,19 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="18dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginEnd="10dp"
                         android:contentDescription="Ride Icon"
                         android:src="@drawable/ic_directions_car" />
 
@@ -137,19 +137,19 @@
                         android:layout_weight="1"
                         android:text="Trip Booking Details"
                         android:textColor="@color/on_surface"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPrefill"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="42dp"
                         android:text="DEMO FILL"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         app:icon="@drawable/ic_magic"
-                        app:iconSize="14dp" />
+                        app:iconSize="16dp" />
                 </LinearLayout>
 
                 <!-- Passenger Name -->
@@ -157,12 +157,12 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:hint="Passenger Name"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusTopStart="14dp"
                     app:boxStrokeColor="@color/primary"
                     app:startIconDrawable="@drawable/ic_person">
 
@@ -171,23 +171,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
+                        android:paddingVertical="14dp"
                         android:singleLine="true"
                         android:textColor="@color/on_surface"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Route Group with Dashed Connector Line -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="20dp">
 
                     <!-- Visual Connector Line between Pins -->
                     <View
                         android:layout_width="2dp"
-                        android:layout_height="38dp"
+                        android:layout_height="44dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="56dp"
                         android:background="@drawable/bg_route_line" />
 
                     <LinearLayout
@@ -200,12 +201,12 @@
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="14dp"
                             android:hint="Pickup Location"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusTopStart="14dp"
                             app:boxStrokeColor="@color/primary"
                             app:startIconDrawable="@drawable/ic_pickup_pin">
 
@@ -214,9 +215,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="textPostalAddress"
+                                android:paddingVertical="14dp"
                                 android:singleLine="true"
                                 android:textColor="@color/on_surface"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Destination Location -->
@@ -225,10 +227,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Destination Location"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusTopStart="14dp"
                             app:boxStrokeColor="@color/primary"
                             app:startIconDrawable="@drawable/ic_destination_pin">
 
@@ -237,9 +239,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="textPostalAddress"
+                                android:paddingVertical="14dp"
                                 android:singleLine="true"
                                 android:textColor="@color/on_surface"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -248,7 +251,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="22dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
@@ -256,26 +259,26 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="8dp"
                             android:text="Ride Type (Factory)"
                             android:textColor="@color/on_surface_variant"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <Spinner
                             android:id="@+id/spinnerRideType"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
+                            android:layout_height="52dp"
                             android:background="@drawable/bg_dropdown_container"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="36dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="40dp"
                             android:spinnerMode="dropdown" />
                     </LinearLayout>
 
@@ -283,26 +286,26 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="8dp"
                             android:text="Category (Abstract)"
                             android:textColor="@color/on_surface_variant"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <Spinner
                             android:id="@+id/spinnerCategory"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
+                            android:layout_height="52dp"
                             android:background="@drawable/bg_dropdown_container"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="36dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="40dp"
                             android:spinnerMode="dropdown" />
                     </LinearLayout>
                 </LinearLayout>
@@ -311,11 +314,11 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBookRide"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
+                    android:layout_height="56dp"
                     android:text="BOOK RIDE NOW"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    app:cornerRadius="14dp"
+                    app:cornerRadius="16dp"
                     app:elevation="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -324,10 +327,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:animateLayoutChanges="true"
             app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
             app:strokeColor="@color/outline_variant"
             app:strokeWidth="1dp">
@@ -337,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="18dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -346,9 +349,9 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginEnd="6dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="Pattern Bolt"
                         android:src="@drawable/ic_bolt" />
 
@@ -357,7 +360,7 @@
                         android:layout_height="wrap_content"
                         android:text="PATTERN DIAGNOSTICS"
                         android:textColor="@color/on_surface_variant"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -365,13 +368,13 @@
                     android:id="@+id/tvSingleton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/bg_status_badge"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
                     android:text="Singleton: Same instance = true"
                     android:textColor="@color/primary"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -380,10 +383,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:animateLayoutChanges="true"
             app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
             app:strokeColor="@color/outline_variant"
             app:strokeWidth="1dp">
@@ -393,14 +396,14 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LIVE STATUS &amp; DISPATCH"
                     android:textColor="@color/on_surface_variant"
-                    android:textSize="11sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <!-- Status Header -->
@@ -408,33 +411,33 @@
                     android:id="@+id/tvStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="8dp"
                     android:text="Status: No ride booked"
                     android:textColor="@color/on_surface"
-                    android:textSize="17sp"
+                    android:textSize="19sp"
                     android:textStyle="bold" />
 
                 <!-- Details Output Box -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:animateLayoutChanges="true"
                     android:background="@drawable/bg_terminal_box"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/tvRideDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableTop="@drawable/ic_receipt_long"
-                        android:drawablePadding="8dp"
+                        android:drawablePadding="10dp"
                         android:gravity="center"
-                        android:lineSpacingMultiplier="1.25"
+                        android:lineSpacingMultiplier="1.35"
                         android:text="No active ride.\nSubmit a trip above to observe pattern execution."
-                        android:textColor="@color/on_surface_variant"
-                        android:textSize="13sp" />
+                        android:textColor="@color/on_surface"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -443,10 +446,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="28dp"
             android:animateLayoutChanges="true"
             app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
             app:strokeColor="@color/outline_variant"
             app:strokeWidth="1dp">
@@ -456,15 +459,15 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="14dp"
                     android:text="DATABASE OBSERVER RECORDS"
                     android:textColor="@color/on_surface_variant"
-                    android:textSize="11sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -477,33 +480,33 @@
                         android:id="@+id/btnShowDatabase"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="6dp"
+                        android:layout_height="52dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="SHOW DB"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        app:cornerRadius="12dp"
+                        app:cornerRadius="14dp"
                         app:icon="@drawable/ic_database"
                         app:iconGravity="textStart"
-                        app:iconSize="16dp" />
+                        app:iconSize="18dp" />
 
                     <!-- Clear Database Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnClearDatabase"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="6dp"
+                        android:layout_height="52dp"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:text="CLEAR ALL"
                         android:textColor="@color/color_danger"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        app:cornerRadius="12dp"
+                        app:cornerRadius="14dp"
                         app:icon="@drawable/ic_delete_sweep"
                         app:iconGravity="textStart"
-                        app:iconSize="16dp"
+                        app:iconSize="18dp"
                         app:iconTint="@color/color_danger"
                         app:strokeColor="@color/color_danger" />
                 </LinearLayout>
