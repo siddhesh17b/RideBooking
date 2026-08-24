@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // ==================== PROXY PATTERN ====================
-
+        // Login state used by the Proxy to control access.
         tvProxyStatus = findViewById(R.id.tvProxyStatus);
         btnLogin = findViewById(R.id.btnLogin);
 
@@ -154,10 +154,14 @@ public class MainActivity extends AppCompatActivity {
                 familyRide = familyFactory.createCar();
 
             // ==================== PROXY PATTERN ====================
-
+            // Client uses the Proxy instead of directly accessing RealRideService.
             RideService system = new RideServiceProxy(loggedIn);
+
+            // Proxy checks authentication and either blocks the request
+            // or forwards it to RealRideService.
             String result = system.bookRide(ride);
 
+            // useless Block
             if(!loggedIn) {
                 tvStatus.setText("Status: Booking Denied");
                 tvRideDetails.setText(result);
