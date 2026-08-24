@@ -53,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
             loggedIn = !loggedIn;
 
             if(loggedIn) {
-                tvProxyStatus.setText("Proxy: Authentication Successful");
+                tvProxyStatus.setText("Proxy: Authenticated (Access Granted)");
+                tvProxyStatus.setTextColor(getColor(R.color.status_success));
                 btnLogin.setText("LOGOUT");
             } else {
                 tvProxyStatus.setText("Proxy: Not authenticated");
+                tvProxyStatus.setTextColor(getColor(R.color.on_surface));
                 btnLogin.setText("LOGIN");
             }
         });
@@ -95,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
         btnShowDatabase.setOnClickListener(v -> {
             tvStatus.setText("Database Records");
+            tvStatus.setTextColor(getColor(R.color.primary));
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
             tvRideDetails.setText(database.getAllRides());
         });
 
@@ -122,13 +127,17 @@ public class MainActivity extends AppCompatActivity {
             String rideType = spinnerRideType.getSelectedItem().toString();
             String category = spinnerCategory.getSelectedItem().toString();
 
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
+
             // ==================== CHAIN OF RESPONSIBILITY ====================
 
             RideRequest request = new RideRequest(name, pickup, destination, rideType, loggedIn);
 
             if(!loginHandler.handle(request)) {
-                tvStatus.setText("Status: Booking Denied");
-                tvRideDetails.setText("Chain of Responsibility: Request rejected.");
+                tvStatus.setText("Status: Booking Denied (Auth Required)");
+                tvStatus.setTextColor(getColor(R.color.status_denied));
+                tvRideDetails.setText("🔒 [Proxy / Chain of Responsibility]\nAccess Denied: You must be logged in to book a ride.\n\n👉 Action: Tap 'LOGIN' at the top to authenticate.");
                 return;
             }
 
@@ -161,9 +170,10 @@ public class MainActivity extends AppCompatActivity {
             // or forwards it to RealRideService.
             String result = system.bookRide(ride);
 
-            // useless Block
+            // Useless block
             if(!loggedIn) {
                 tvStatus.setText("Status: Booking Denied");
+                tvStatus.setTextColor(getColor(R.color.status_denied));
                 tvRideDetails.setText(result);
                 return;
             }
@@ -179,14 +189,26 @@ public class MainActivity extends AppCompatActivity {
             coordinator.notifyObservers(rideId, "Accepted");
 
             tvStatus.setText("Status: Ride Accepted");
-            tvRideDetails.setText(result + "\nCategory: " + familyRide + "\nRide ID: " + rideId);
+            tvStatus.setTextColor(getColor(R.color.status_success));
+            tvRideDetails.setText(
+                result + "\n" +
+                "Category: " + familyRide + "\n" +
+                "Ride ID: " + rideId + "\n\n" +
+                "── Observer Pattern Broadcast ──\n" +
+                "• RideCoordinator notified 2 observers:\n" +
+                "  ↳ Driver Observer: Ride " + rideId + " is Accepted\n" +
+                "  ↳ Rider Observer: Ride " + rideId + " is Accepted"
+            );
         });
 
         // ==================== DATABASE ====================
 
         btnClearDatabase.setOnClickListener(v -> {
             database.clearDatabase();
-            tvStatus.setText("Database cleared");
+            tvStatus.setText("Status: Database Cleared");
+            tvStatus.setTextColor(getColor(R.color.status_warning));
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
             tvRideDetails.setText("All ride records have been deleted.");
         });
     }
