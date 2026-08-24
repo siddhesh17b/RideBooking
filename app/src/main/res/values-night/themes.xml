@@ -9,6 +9,11 @@
         <item name="colorOnPrimary">#0F172A</item>
         <item name="colorOnBackground">#F8FAFC</item>
         <item name="colorOnSurface">#F8FAFC</item>
+
+        <!-- Global Typography: Bundled Inter Font -->
+        <item name="fontFamily">@font/inter</item>
+        <item name="android:fontFamily">@font/inter</item>
+
         <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
     </style>
 </resources>
