@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary & Accent brand colors -->
-    <color name="primary">#4F46E5</color>
-    <color name="primary_variant">#4338CA</color>
-    <color name="primary_container">#EEF2FF</color>
+    <!-- Primary & Accent brand colors: Aesthetic Light Pink / Rose -->
+    <color name="primary">#DB2777</color>
+    <color name="primary_variant">#BE185D</color>
+    <color name="primary_container">#FCE7F3</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="on_primary_container">#3730A3</color>
+    <color name="on_primary_container">#831843</color>
 
-    <!-- Secondary & Accent -->
-    <color name="secondary">#0EA5E9</color>
-    <color name="secondary_container">#E0F2FE</color>
+    <!-- Secondary & Accent: Blossom Pink -->
+    <color name="secondary">#F472B6</color>
+    <color name="secondary_container">#FDF2F8</color>
     <color name="on_secondary">#FFFFFF</color>
 
-    <!-- Surfaces & Backgrounds -->
-    <color name="background">#F8FAFC</color>
+    <!-- Surfaces & Backgrounds: Soft Blush Canvas & White Cards -->
+    <color name="background">#FFF5F7</color>
     <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F1F5F9</color>
+    <color name="surface_variant">#FDF2F8</color>
 
     <!-- Text & Typography -->
-    <color name="on_background">#0F172A</color>
-    <color name="on_surface">#1E293B</color>
-    <color name="on_surface_variant">#64748B</color>
+    <color name="on_background">#1E1B1D</color>
+    <color name="on_surface">#272325</color>
+    <color name="on_surface_variant">#70666B</color>
 
-    <!-- Borders & Dividers -->
-    <color name="outline">#CBD5E1</color>
-    <color name="outline_variant">#E2E8F0</color>
+    <!-- Borders & Dividers: Soft Rose Lines -->
+    <color name="outline">#FBCFE8</color>
+    <color name="outline_variant">#FCE7F3</color>
 
-    <!-- Component Specific -->
-    <color name="input_background">#F8FAFC</color>
-    <color name="badge_background">#EEF2FF</color>
-    <color name="badge_border">#C7D2FE</color>
-    <color name="output_box_background">#F8FAFC</color>
+    <!-- Component Specific Backgrounds -->
+    <color name="input_background">#FFF5F7</color>
+    <color name="badge_background">#FDF2F8</color>
+    <color name="badge_border">#FBCFE8</color>
+    <color name="output_box_background">#FFF1F5</color>
 
     <!-- Status & Alerts -->
     <color name="status_success">#10B981</color>
     <color name="status_warning">#F59E0B</color>
-    <color name="status_denied">#EF4444</color>
-    <color name="color_danger">#DC2626</color>
-    <color name="color_danger_container">#FEE2E2</color>
+    <color name="status_denied">#E11D48</color>
+    <color name="color_danger">#E11D48</color>
+    <color name="color_danger_container">#FFE4E6</color>
 
     <!-- Base Helpers -->
     <color name="black">#000000</color>
