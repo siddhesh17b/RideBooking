@@ -1,0 +1,785 @@
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\MainActivity.java =====
+package com.xyz.ridebooking;
+
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import com.xyz.ridebooking.singleton.RideBookingSystem;
+import com.xyz.ridebooking.factory.Ride;
+import com.xyz.ridebooking.factory.RideFactory;
+import com.xyz.ridebooking.proxy.RideService;
+import com.xyz.ridebooking.proxy.RideServiceProxy;
+import com.xyz.ridebooking.abstractfactory.EconomyRideFactory;
+import com.xyz.ridebooking.abstractfactory.PremiumRideFactory;
+import com.xyz.ridebooking.abstractfactory.RideFamilyFactory;
+import com.xyz.ridebooking.observer.Driver;
+import com.xyz.ridebooking.observer.RideCoordinator;
+import com.xyz.ridebooking.observer.Rider;
+import com.xyz.ridebooking.observer.DatabaseManager;
+import com.xyz.ridebooking.chain.DetailsHandler;
+import com.xyz.ridebooking.chain.LoginHandler;
+import com.xyz.ridebooking.chain.RideHandler;
+import com.xyz.ridebooking.chain.RideRequest;
+import com.xyz.ridebooking.chain.RideTypeHandler;
+
+public class MainActivity extends AppCompatActivity {
+
+    private Spinner spinnerRideType;
+    private Spinner spinnerCategory;
+    private Button btnBookRide;
+    private TextView tvStatus;
+    private TextView tvRideDetails;
+    private TextView tvSingleton;
+    private boolean loggedIn = false;
+    private TextView tvProxyStatus;
+    private Button btnLogin;
+    private Button btnClearDatabase;
+    private Button btnShowDatabase;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // ==================== PROXY PATTERN ====================
+        // Login state used by the Proxy to control access.
+        tvProxyStatus = findViewById(R.id.tvProxyStatus);
+        btnLogin = findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(v -> {
+            loggedIn = !loggedIn;
+
+            if(loggedIn) {
+                tvProxyStatus.setText("Proxy: Authenticated (Access Granted)");
+                tvProxyStatus.setTextColor(getColor(R.color.status_success));
+                btnLogin.setText("LOGOUT");
+            } else {
+                tvProxyStatus.setText("Proxy: Not authenticated");
+                tvProxyStatus.setTextColor(getColor(R.color.on_surface));
+                btnLogin.setText("LOGIN");
+            }
+        });
+
+        // ==================== OBSERVER PATTERN ====================
+
+        RideCoordinator coordinator = new RideCoordinator(this);
+        coordinator.registerObserver(new Rider());
+        coordinator.registerObserver(new Driver());
+
+        spinnerRideType = findViewById(R.id.spinnerRideType);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        btnBookRide = findViewById(R.id.btnBookRide);
+        tvStatus = findViewById(R.id.tvStatus);
+        tvRideDetails = findViewById(R.id.tvRideDetails);
+
+        String[] rideTypes = {"Bike", "Auto", "Car"};
+        String[] categories = {"Economy", "Premium"};
+
+        // ==================== DATABASE ====================
+
+        DatabaseManager database = new DatabaseManager(this);
+
+        // ==================== CHAIN OF RESPONSIBILITY ====================
+
+        RideHandler loginHandler = new LoginHandler();
+        RideHandler detailsHandler = new DetailsHandler();
+        RideHandler rideTypeHandler = new RideTypeHandler();
+
+        loginHandler.setNextHandler(detailsHandler);
+        detailsHandler.setNextHandler(rideTypeHandler);
+
+        // ==================== DATABASE DISPLAY ====================
+
+        btnShowDatabase = findViewById(R.id.btnShowDatabase);
+
+        btnShowDatabase.setOnClickListener(v -> {
+            tvStatus.setText("Database Records");
+            tvStatus.setTextColor(getColor(R.color.primary));
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
+            tvRideDetails.setText(database.getAllRides());
+        });
+
+        btnClearDatabase = findViewById(R.id.btnClearDatabase);
+
+        // ==================== SINGLETON PATTERN ====================
+
+        tvSingleton = findViewById(R.id.tvSingleton);
+
+        RideBookingSystem system1 = RideBookingSystem.getInstance();
+        RideBookingSystem system2 = RideBookingSystem.getInstance();
+
+        boolean same = system1 == system2;
+
+        tvSingleton.setText("Singleton: Same instance = " + same +
+                "\n(ID1: " + Integer.toHexString(System.identityHashCode(system1)) +
+                " == ID2: " + Integer.toHexString(System.identityHashCode(system2)) + ")");
+
+        // ==================== DEMO PREFILL ====================
+
+        Button btnPrefill = findViewById(R.id.btnPrefill);
+        if(btnPrefill != null) {
+            btnPrefill.setOnClickListener(v -> {
+                ((android.widget.EditText) findViewById(R.id.etName)).setText("Siddhesh");
+                ((android.widget.EditText) findViewById(R.id.etPickup)).setText("Home");
+                ((android.widget.EditText) findViewById(R.id.etDestination)).setText("College");
+            });
+        }
+
+        spinnerRideType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, rideTypes));
+        spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
+
+        btnBookRide.setOnClickListener(v -> {
+
+            String name = ((android.widget.EditText) findViewById(R.id.etName)).getText().toString();
+            String pickup = ((android.widget.EditText) findViewById(R.id.etPickup)).getText().toString();
+            String destination = ((android.widget.EditText) findViewById(R.id.etDestination)).getText().toString();
+            String rideType = spinnerRideType.getSelectedItem().toString();
+            String category = spinnerCategory.getSelectedItem().toString();
+
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
+
+            // ==================== CHAIN OF RESPONSIBILITY TRACER ====================
+
+            RideRequest request = new RideRequest(name, pickup, destination, rideType, loggedIn);
+
+            boolean loginOk = loggedIn;
+            boolean detailsOk = !name.trim().isEmpty() && !pickup.trim().isEmpty() && !destination.trim().isEmpty();
+            boolean typeOk = rideType.equalsIgnoreCase("Bike") || rideType.equalsIgnoreCase("Auto") || rideType.equalsIgnoreCase("Car");
+
+            if(!loginHandler.handle(request)) {
+                tvStatus.setText("Status: Request Denied ❌");
+                tvStatus.setTextColor(getColor(R.color.status_denied));
+
+                StringBuilder chainTrace = new StringBuilder();
+                chainTrace.append("Validation Failed in Chain of Responsibility\n");
+                chainTrace.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+                chainTrace.append("── Chain of Responsibility Tracer ──\n");
+                chainTrace.append(loginOk ? "✓ [1/3] LoginHandler: PASSED (Proxy Authenticated)\n" : "❌ [1/3] LoginHandler: REJECTED (User Not Logged In)\n");
+                chainTrace.append(loginOk ? (detailsOk ? "✓ [2/3] DetailsHandler: PASSED (All Fields Valid)\n" : "❌ [2/3] DetailsHandler: REJECTED (Missing Name or Locations)\n") : "⏭️ [2/3] DetailsHandler: SKIPPED\n");
+                chainTrace.append((loginOk && detailsOk) ? (typeOk ? "✓ [3/3] RideTypeHandler: PASSED (Valid Ride Type)\n" : "❌ [3/3] RideTypeHandler: REJECTED\n") : "⏭️ [3/3] RideTypeHandler: SKIPPED\n");
+                chainTrace.append("\n👉 Next Step: ");
+                if(!loginOk) {
+                    chainTrace.append("Tap 'LOGIN' at the top to pass Proxy Auth.");
+                } else if(!detailsOk) {
+                    chainTrace.append("Enter Name, Pickup & Destination (or tap DEMO FILL).");
+                } else {
+                    chainTrace.append("Choose a valid ride type.");
+                }
+
+                tvRideDetails.setText(chainTrace.toString());
+                return;
+            }
+
+            // ==================== FACTORY METHOD ====================
+
+            RideFactory factory = new RideFactory();
+            Ride ride = factory.createRide(rideType, name);
+
+            int baseFare;
+            if(rideType.equalsIgnoreCase("Bike")) {
+                baseFare = 50;
+            } else if(rideType.equalsIgnoreCase("Auto")) {
+                baseFare = 90;
+            } else {
+                baseFare = 180;
+            }
+
+            // ==================== ABSTRACT FACTORY ====================
+
+            RideFamilyFactory familyFactory;
+            double categoryMultiplier;
+
+            if(category.equalsIgnoreCase("Economy")) {
+                familyFactory = new EconomyRideFactory();
+                categoryMultiplier = 1.0;
+            } else {
+                familyFactory = new PremiumRideFactory();
+                categoryMultiplier = 1.5;
+            }
+
+            String familyRide;
+            if(rideType.equalsIgnoreCase("Bike"))
+                familyRide = familyFactory.createBike();
+            else
+                familyRide = familyFactory.createCar();
+
+            int finalFare = (int) (baseFare * categoryMultiplier);
+
+            // ==================== PROXY PATTERN ====================
+            // Client uses the Proxy instead of directly accessing RealRideService.
+            RideService system = new RideServiceProxy(loggedIn);
+
+            // Proxy checks authentication and either blocks the request
+            // or forwards it to RealRideService.
+            String result = system.bookRide(ride);
+
+            // Fallback check
+            if(!loggedIn) {
+                tvStatus.setText("Status: Booking Denied ❌");
+                tvStatus.setTextColor(getColor(R.color.status_denied));
+                tvRideDetails.setText(result);
+                return;
+            }
+
+            String rideId = "R" + System.currentTimeMillis();
+
+            // ==================== DATABASE ====================
+
+            database.insertRide(rideId, name, pickup, destination, rideType, category, "Requested");
+
+            // ==================== OBSERVER PATTERN ====================
+
+            coordinator.notifyObservers(rideId, "Accepted");
+
+            tvStatus.setText("Status: Ride Accepted ✅");
+            tvStatus.setTextColor(getColor(R.color.status_success));
+            tvRideDetails.setText(
+                "✓ " + result + "\n" +
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                "• Passenger: " + name + "\n" +
+                "• Route: " + pickup + " ➔ " + destination + "\n" +
+                "• Vehicle: " + familyRide + "\n" +
+                "• Est. Fare: ₹" + finalFare + " (Base: ₹" + baseFare + " × " + categoryMultiplier + "x " + category + ")\n" +
+                "• Ride ID: " + rideId + "\n\n" +
+                "── Chain of Responsibility Tracer ──\n" +
+                "✓ [1/3] LoginHandler: PASSED (Proxy Auth Valid)\n" +
+                "✓ [2/3] DetailsHandler: PASSED (Passenger & Route Valid)\n" +
+                "✓ [3/3] RideTypeHandler: PASSED (" + rideType + " Confirmed)\n\n" +
+                "── Observer Pattern Broadcast ──\n" +
+                "📢 RideCoordinator notified 2 observers:\n" +
+                "  ↳ Driver Observer: Ride " + rideId + " is Accepted\n" +
+                "  ↳ Rider Observer: Ride " + rideId + " is Accepted"
+            );
+        });
+
+        // ==================== DATABASE ====================
+
+        btnClearDatabase.setOnClickListener(v -> {
+            database.clearDatabase();
+            tvStatus.setText("Status: Database Cleared");
+            tvStatus.setTextColor(getColor(R.color.status_warning));
+            tvRideDetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            tvRideDetails.setGravity(android.view.Gravity.START);
+            tvRideDetails.setText("Database cleared successfully.\nAll ride records have been removed.");
+        });
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\abstractfactory\EconomyRideFactory.java =====
+package com.xyz.ridebooking.abstractfactory;
+
+public class EconomyRideFactory implements RideFamilyFactory {
+
+    @Override
+    public String createBike() {
+        return "Economy Bike";
+    }
+
+    @Override
+    public String createCar() {
+        return "Economy Car";
+    }
+}   
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\abstractfactory\PremiumRideFactory.java =====
+package com.xyz.ridebooking.abstractfactory;
+
+public class PremiumRideFactory implements RideFamilyFactory {
+
+    @Override
+    public String createBike() {
+        return "Premium Bike";
+    }
+
+    @Override
+    public String createCar() {
+        return "Premium Car";
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\abstractfactory\RideFamilyFactory.java =====
+package com.xyz.ridebooking.abstractfactory;
+
+public interface RideFamilyFactory {
+    String createBike();
+    String createCar();
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\chain\DetailsHandler.java =====
+package com.xyz.ridebooking.chain;
+
+public class DetailsHandler extends RideHandler {
+
+    @Override
+    public boolean handle(RideRequest request) {
+
+        if(request.getName().trim().isEmpty())
+            return false;
+
+        if(request.getPickup().trim().isEmpty())
+            return false;
+
+        if(request.getDestination().trim().isEmpty())
+            return false;
+
+        if(nextHandler != null)
+            return nextHandler.handle(request);
+
+        return true;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\chain\LoginHandler.java =====
+package com.xyz.ridebooking.chain;
+
+public class LoginHandler extends RideHandler {
+
+    @Override
+    public boolean handle(RideRequest request) {
+
+        if(!request.isLoggedIn()) {
+            return false;
+        }
+
+        if(nextHandler != null)
+            return nextHandler.handle(request);
+
+        return true;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\chain\RideHandler.java =====
+package com.xyz.ridebooking.chain;
+
+public abstract class RideHandler {
+
+    protected RideHandler nextHandler;
+
+    public void setNextHandler(RideHandler nextHandler) {
+        this.nextHandler = nextHandler;
+    }
+
+    public abstract boolean handle(RideRequest request);
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\chain\RideRequest.java =====
+package com.xyz.ridebooking.chain;
+
+public class RideRequest {
+
+    private String name;
+    private String pickup;
+    private String destination;
+    private String rideType;
+    private boolean loggedIn;
+
+    public RideRequest(String name, String pickup, String destination, String rideType, boolean loggedIn) {
+        this.name = name;
+        this.pickup = pickup;
+        this.destination = destination;
+        this.rideType = rideType;
+        this.loggedIn = loggedIn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPickup() {
+        return pickup;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public String getRideType() {
+        return rideType;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\chain\RideTypeHandler.java =====
+package com.xyz.ridebooking.chain;
+
+public class RideTypeHandler extends RideHandler {
+
+    @Override
+    public boolean handle(RideRequest request) {
+
+        String type = request.getRideType();
+
+        if(!type.equalsIgnoreCase("Bike") &&
+                !type.equalsIgnoreCase("Auto") &&
+                !type.equalsIgnoreCase("Car")) {
+            return false;
+        }
+
+        if(nextHandler != null)
+            return nextHandler.handle(request);
+
+        return true;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\factory\AutoRide.java =====
+package com.xyz.ridebooking.factory;
+
+public class AutoRide extends Ride {
+
+    public AutoRide(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getRideType() {
+        return "Auto Ride";
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\factory\BikeRide.java =====
+package com.xyz.ridebooking.factory;
+
+public class BikeRide extends Ride {
+
+    public BikeRide(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getRideType() {
+        return "Bike Ride";
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\factory\CarRide.java =====
+package com.xyz.ridebooking.factory;
+
+public class CarRide extends Ride {
+
+    public CarRide(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getRideType() {
+        return "Car Ride";
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\factory\Ride.java =====
+package com.xyz.ridebooking.factory;
+
+public abstract class Ride {
+
+    protected String name;
+
+    public Ride(String name) {
+        this.name = name;
+    }
+
+    public abstract String getRideType();
+
+    public String getDetails() {
+        return name + " - " + getRideType();
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\factory\RideFactory.java =====
+package com.xyz.ridebooking.factory;
+
+public class RideFactory {
+
+    public Ride createRide(String type, String name) {
+
+        if(type.equalsIgnoreCase("Bike"))
+            return new BikeRide(name);
+
+        if(type.equalsIgnoreCase("Auto"))
+            return new AutoRide(name);
+
+        if(type.equalsIgnoreCase("Car"))
+            return new CarRide(name);
+
+        return null;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\observer\DatabaseManager.java =====
+package com.xyz.ridebooking.observer;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class DatabaseManager extends SQLiteOpenHelper {
+
+    private static final String DATABASE_NAME = "RideBooking.db";
+    private static final int DATABASE_VERSION = 1;
+
+    public DatabaseManager(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE rides (rideId TEXT PRIMARY KEY, riderName TEXT, pickup TEXT, destination TEXT, rideType TEXT, category TEXT, status TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS rides");
+        onCreate(db);
+    }
+
+    public void insertRide(String rideId, String riderName, String pickup, String destination, String rideType, String category, String status) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("rideId", rideId);
+        values.put("riderName", riderName);
+        values.put("pickup", pickup);
+        values.put("destination", destination);
+        values.put("rideType", rideType);
+        values.put("category", category);
+        values.put("status", status);
+
+        db.insert("rides", null, values);
+        db.close();
+    }
+
+    public boolean rideExists(String rideId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rideId FROM rides WHERE rideId = ?", new String[]{rideId});
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        db.close();
+        return exists;
+    }
+    
+
+    public void updateStatus(String rideId, String status) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("status", status);
+
+        db.update("rides", values, "rideId = ?", new String[]{rideId});
+        db.close();
+    }
+
+    public void clearDatabase() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("rides", null, null);
+        db.close();
+    }
+
+    public String getAllRides() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM rides", null);
+
+        StringBuilder result = new StringBuilder();
+
+        if(cursor.getCount() == 0) {
+            result.append("Database is empty.");
+        } else {
+            while(cursor.moveToNext()) {
+                result.append("Ride ID: ").append(cursor.getString(0)).append("\n");
+                result.append("Rider: ").append(cursor.getString(1)).append("\n");
+                result.append("Pickup: ").append(cursor.getString(2)).append("\n");
+                result.append("Destination: ").append(cursor.getString(3)).append("\n");
+                result.append("Ride Type: ").append(cursor.getString(4)).append("\n");
+                result.append("Category: ").append(cursor.getString(5)).append("\n");
+                result.append("Status: ").append(cursor.getString(6)).append("\n");
+                result.append("-------------------------\n");
+            }
+        }
+
+        cursor.close();
+        db.close();
+
+        return result.toString();
+    }
+
+    public String getRide(String rideId) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM rides WHERE rideId = ?", new String[]{rideId});
+
+        String result = "";
+
+        if(cursor.moveToFirst()) {
+            result = "Ride ID: " + cursor.getString(0)
+                    + "\nRider: " + cursor.getString(1)
+                    + "\nPickup: " + cursor.getString(2)
+                    + "\nDestination: " + cursor.getString(3)
+                    + "\nRide Type: " + cursor.getString(4)
+                    + "\nCategory: " + cursor.getString(5)
+                    + "\nStatus: " + cursor.getString(6);
+        }
+
+        cursor.close();
+        db.close();
+
+        return result;
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\observer\Driver.java =====
+package com.xyz.ridebooking.observer;
+
+public class Driver implements RideObserver {
+
+    @Override
+    public void update(String rideId, String status) {
+        System.out.println("Driver notified: Ride " + rideId + " status is " + status);
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\observer\RideCoordinator.java =====
+package com.xyz.ridebooking.observer;
+
+import android.content.Context;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RideCoordinator {
+
+    private List<RideObserver> observers = new ArrayList<>();
+    private DatabaseManager database;
+
+    public RideCoordinator(Context context) {
+        database = new DatabaseManager(context);
+    }
+
+    public void registerObserver(RideObserver observer) {
+        observers.add(observer);
+    }
+
+    public void notifyObservers(String rideId, String status) {
+        database.updateStatus(rideId, status);
+
+        for(RideObserver observer : observers) {
+            observer.update(rideId, status);
+        }
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\observer\RideObserver.java =====
+package com.xyz.ridebooking.observer;
+
+public interface RideObserver {
+    void update(String rideId, String status);
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\observer\Rider.java =====
+package com.xyz.ridebooking.observer;
+
+public class Rider implements RideObserver {
+
+    @Override
+    public void update(String rideId, String status) {
+        System.out.println("Rider notified: Ride " + rideId + " status is " + status);
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\proxy\RealRideService.java =====
+package com.xyz.ridebooking.proxy;
+
+import com.xyz.ridebooking.factory.Ride;
+
+// Real Subject: performs the actual ride-booking operation.
+// The Proxy controls access to this class.
+public class RealRideService implements RideService {
+
+    @Override
+    public String bookRide(Ride ride) {
+
+        // Actual booking logic is performed here.
+        return "Ride booked successfully: " + ride.getDetails();
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\proxy\RideService.java =====
+package com.xyz.ridebooking.proxy;
+
+import com.xyz.ridebooking.factory.Ride;
+
+// Common interface shared by the Proxy and Real Subject.
+// This allows the client to use either through the same interface.
+public interface RideService {
+    String bookRide(Ride ride);
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\proxy\RideServiceProxy.java =====
+package com.xyz.ridebooking.proxy;
+
+import com.xyz.ridebooking.factory.Ride;
+
+// Proxy: controls access to the RealRideService
+// before allowing the ride-booking operation.
+public class RideServiceProxy implements RideService {
+
+    // Reference to the actual service that performs the booking.
+    private RealRideService realRideService;
+
+    // Stores whether the user is authenticated.
+    private boolean loggedIn;
+
+    public RideServiceProxy(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+
+        // Proxy creates/holds the Real Subject.
+        realRideService = new RealRideService();
+    }
+
+    @Override
+    public String bookRide(Ride ride) {
+
+        // Proxy checks access before calling the real service.
+        // If the user is not logged in, the request is blocked.
+        if(!loggedIn) {
+            return "Please login before booking a ride.";
+        }
+
+        // Access is allowed, so the Proxy forwards the request
+        // to the RealRideService.
+        return realRideService.bookRide(ride);
+    }
+}
+
+===== D:\Work\Learning_and_projects\Projects\5th_sem\design_pattern\RideBooking\app\src\main\java\com\xyz\ridebooking\singleton\RideBookingSystem.java =====
+package com.xyz.ridebooking.singleton;
+
+public class RideBookingSystem {
+
+    private static RideBookingSystem instance;
+
+    private RideBookingSystem() {
+    }
+
+    public static RideBookingSystem getInstance() {
+        if(instance == null) {
+            instance = new RideBookingSystem();
+        }
+
+        return instance;
+    }
+
+    public String getSystemName() {
+        return "Ride Booking System";
+    }
+}
+
