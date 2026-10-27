@@ -1,9 +1,11 @@
 package com.xyz.ridebooking;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -55,6 +57,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // UI Input Widgets
+    private ScrollView mainScrollView;
     private EditText etName;
     private EditText etPickup;
     private EditText etDestination;
@@ -138,6 +141,25 @@ public class MainActivity extends AppCompatActivity {
         spinnerRideType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, rideTypes));
         spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
         spinnerPricingMode.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pricingModes));
+
+        mainScrollView = findViewById(R.id.mainScrollView);
+    }
+
+    /**
+     * Intercepts PC mouse wheel events at the Activity window level so that
+     * spinning the mouse wheel anywhere over the emulator smoothly scrolls the screen.
+     */
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_SCROLL) {
+            float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+            if (vScroll != 0 && mainScrollView != null) {
+                // Negative vScroll = wheel scrolled down; Positive = wheel scrolled up
+                mainScrollView.smoothScrollBy(0, (int) (-vScroll * 280));
+                return true;
+            }
+        }
+        return super.dispatchGenericMotionEvent(event);
     }
 
     // ========================================================================
@@ -236,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 etDestination.setText(clone.getDestination());
                 setSpinnerSelection(spinnerRideType, clone.getRideType());
                 setSpinnerSelection(spinnerCategory, clone.getCategory());
+                setSpinnerSelection(spinnerPricingMode, clone.getPricingMode());
 
                 tvStatus.setText("Status: Prototype Cloned 📋");
                 tvStatus.setTextColor(getColor(R.color.primary));
@@ -280,6 +303,12 @@ public class MainActivity extends AppCompatActivity {
 
             // Pop previous snapshot from caretaker and restore in originator
             RideBookingMemento previousState = mementoCaretaker.undo();
+
+            // If the popped snapshot matches current UI, pop once more so the user gets an immediate visible rollback
+            if (isCurrentFormMatching(previousState) && mementoCaretaker.canUndo()) {
+                previousState = mementoCaretaker.undo();
+            }
+
             mementoOriginator.restoreFromMemento(previousState);
 
             // Revert UI fields back to restored snapshot
@@ -288,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
             etDestination.setText(mementoOriginator.getDestinationLocation());
             setSpinnerSelection(spinnerRideType, mementoOriginator.getRideType());
             setSpinnerSelection(spinnerCategory, mementoOriginator.getCategory());
+            setSpinnerSelection(spinnerPricingMode, mementoOriginator.getPricingMode());
 
             tvStatus.setText("Status: Form Rolled Back ↩️");
             tvStatus.setTextColor(getColor(R.color.primary));
@@ -312,6 +342,23 @@ public class MainActivity extends AppCompatActivity {
 
         mementoOriginator.setFormState(name, pickup, dest, type, cat, price);
         mementoCaretaker.saveSnapshot(mementoOriginator.saveStateToMemento());
+    }
+
+    private boolean isCurrentFormMatching(RideBookingMemento memento) {
+        if (memento == null) return false;
+        String name = etName.getText().toString();
+        String pickup = etPickup.getText().toString();
+        String dest = etDestination.getText().toString();
+        String type = spinnerRideType.getSelectedItem() != null ? spinnerRideType.getSelectedItem().toString() : "";
+        String cat = spinnerCategory.getSelectedItem() != null ? spinnerCategory.getSelectedItem().toString() : "";
+        String price = spinnerPricingMode.getSelectedItem() != null ? spinnerPricingMode.getSelectedItem().toString() : "";
+
+        return name.equals(memento.getPassengerName()) &&
+               pickup.equals(memento.getPickupLocation()) &&
+               dest.equals(memento.getDestinationLocation()) &&
+               type.equalsIgnoreCase(memento.getRideType()) &&
+               cat.equalsIgnoreCase(memento.getCategory()) &&
+               price.equalsIgnoreCase(memento.getPricingMode());
     }
 
     // ========================================================================
@@ -430,6 +477,8 @@ public class MainActivity extends AppCompatActivity {
         String familyRide;
         if (rideType.equalsIgnoreCase("Bike")) {
             familyRide = familyFactory.createBike();
+        } else if (rideType.equalsIgnoreCase("Auto")) {
+            familyRide = familyFactory.createAuto();
         } else {
             familyRide = familyFactory.createCar();
         }
@@ -437,6 +486,15 @@ public class MainActivity extends AppCompatActivity {
         // --------------------------------------------------------------------
         // 4. PRESENTER 3: STRATEGY PATTERN (Dynamic Fare Calculation)
         // --------------------------------------------------------------------
+        int pricingPos = spinnerPricingMode.getSelectedItemPosition();
+        if (pricingPos == 1) {
+            fareStrategyContext.setStrategy(new SurgeFareStrategy());
+        } else if (pricingPos == 2) {
+            fareStrategyContext.setStrategy(new NightFareStrategy());
+        } else {
+            fareStrategyContext.setStrategy(new RegularFareStrategy());
+        }
+
         FareCalculationStrategy currentStrategy = fareStrategyContext.getStrategy();
         int finalCalculatedFare = fareStrategyContext.executeFareCalculation(baseFare, categoryMultiplier);
 

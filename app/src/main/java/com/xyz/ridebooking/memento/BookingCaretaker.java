@@ -19,12 +19,34 @@ public class BookingCaretaker {
     private final Stack<RideBookingMemento> undoStack = new Stack<>();
 
     /**
-     * Pushes a new memento snapshot onto the history stack.
+     * Pushes a new memento snapshot onto the history stack only if it differs from the top.
      */
     public void saveSnapshot(RideBookingMemento memento) {
-        if (memento != null) {
-            undoStack.push(memento);
+        if (memento == null) return;
+
+        // Prevent duplicate snapshots of the exact same state back-to-back
+        if (!undoStack.isEmpty()) {
+            RideBookingMemento top = undoStack.peek();
+            if (isSameState(top, memento)) {
+                return;
+            }
         }
+        undoStack.push(memento);
+    }
+
+    private boolean isSameState(RideBookingMemento a, RideBookingMemento b) {
+        return safeEquals(a.getPassengerName(), b.getPassengerName()) &&
+               safeEquals(a.getPickupLocation(), b.getPickupLocation()) &&
+               safeEquals(a.getDestinationLocation(), b.getDestinationLocation()) &&
+               safeEquals(a.getRideType(), b.getRideType()) &&
+               safeEquals(a.getCategory(), b.getCategory()) &&
+               safeEquals(a.getPricingMode(), b.getPricingMode());
+    }
+
+    private boolean safeEquals(String s1, String s2) {
+        if (s1 == null && s2 == null) return true;
+        if (s1 == null || s2 == null) return false;
+        return s1.equals(s2);
     }
 
     /**

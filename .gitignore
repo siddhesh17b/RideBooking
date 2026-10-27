@@ -1,16 +1,72 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# ====================================================================
+# Android Studio & Gradle Standard .gitignore
+# ====================================================================
+
+# Built application files
+*.apk
+*.aar
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated build directories
+build/
+*/build/
+app/build/
+bin/
+gen/
+out/
+
+# Gradle files & caches
+.gradle/
+.gradletasknamecache
+
+# Local configuration file (contains local SDK & NDK paths)
 local.properties
+
+# Proguard / R8 folder
+proguard/
+
+# Log files
+*.log
+
+# Android Studio temporary files
+captures/
+.navigation/
+.externalNativeBuild/
+.cxx/
+
+# IntelliJ IDEA / Android Studio project files
+*.iml
+.idea/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/caches/
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/deploymentTargetDropDown.xml
+
+# Keystores & Signing credentials
+*.jks
+*.keystore
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Project-specific custom archives
 app/src/main/java/com/xyz/ridebooking/AllJavaCode.txt
