@@ -152,6 +152,40 @@
                         app:iconSize="18dp" />
                 </LinearLayout>
 
+                <!-- Prototype & Memento Quick Actions Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <!-- Prototype Pattern: Clone Favorite Route -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnClonePreset"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1.2"
+                        android:text="CLONE PRESET (PROTOTYPE)"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="14dp" />
+
+                    <!-- Memento Pattern: Undo / Rollback -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnUndoMemento"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="0.8"
+                        android:text="UNDO (MEMENTO)"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="14dp" />
+                </LinearLayout>
+
                 <!-- Passenger Name -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -310,6 +344,32 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Pricing Mode (Strategy Pattern) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Pricing Mode (Strategy Pattern)"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinnerPricingMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:background="@drawable/bg_dropdown_container"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="44dp"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
                 <!-- Book Ride Action Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBookRide"
@@ -374,7 +434,21 @@
                     android:paddingVertical="14dp"
                     android:text="Singleton: Same instance = true"
                     android:textColor="@color/primary"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <!-- Multi-Pattern Status Badge (Strategy, Prototype, Memento) -->
+                <TextView
+                    android:id="@+id/tvPatternDiagnostics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_status_badge"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="14dp"
+                    android:text="Strategy: Standard (1.0x) | Memento: 0 snapshots | Prototype: Ready"
+                    android:textColor="@color/on_surface"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
