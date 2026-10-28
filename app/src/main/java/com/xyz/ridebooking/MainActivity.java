@@ -541,18 +541,18 @@ public class MainActivity extends AppCompatActivity {
         summary.append("• Ride ID   : ").append(rideId).append("\n");
         summary.append("• Final Fare: ₹").append(finalCalculatedFare).append(" (").append(currentStrategy.getStrategyName()).append(")\n\n");
 
-        summary.append("── PRESENTER 3: Strategy Pattern Pricing ──\n");
+        summary.append("── Strategy Pattern Pricing ──\n");
         summary.append("• Strategy : ").append(currentStrategy.getStrategyName()).append("\n");
         summary.append("• Formula  : ").append(currentStrategy.getFormulaDescription()).append("\n");
         summary.append("• Breakdown: Base ₹").append(baseFare).append(" × ").append(categoryMultiplier).append("x Tier ➔ ₹").append(finalCalculatedFare).append("\n\n");
 
-        summary.append("── PRESENTER 2: Template Method Dispatch ──\n");
+        summary.append("── Template Method Dispatch ──\n");
         for (String logStep : templateLogs) {
             summary.append("• ").append(logStep).append("\n");
         }
         summary.append("\n");
 
-        summary.append("── PRESENTER 1: Observer Pattern Broadcast ──\n");
+        summary.append("── Observer Pattern Broadcast ──\n");
         for (String obsLog : observerTrace) {
             summary.append(obsLog).append("\n");
         }
