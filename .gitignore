@@ -70,3 +70,6 @@ ehthumbs.db
 
 # Project-specific custom archives
 app/src/main/java/com/xyz/ridebooking/AllJavaCode.txt
+/__pycache__
+*.docx
+*.py
